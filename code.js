@@ -2,7 +2,8 @@
 // https://patrickkarsh.medium.com/dijkstras-shortest-path-algorithm-in-javascript-1621556a3a15
 // https://www.baeldung.com/cs/dijkstra
 
-// not currently working
+
+// works but not entirely sure if it is finding the right path based on Dijkstra's, or just this implementation
 
 // data structure to input is weighted adjacency list
 function dijkstra (graph, sourceNode, targetNode) 
@@ -27,26 +28,29 @@ function dijkstra (graph, sourceNode, targetNode)
 
         for (var i = 0; i < graph[currNode].length; i++)
         {
-            adjacentValues.push(graph[currNode][i][1]);
+            adjacentValues.push(graph[currNode][i][0]);
         }
 
         for (var j = 0; j < adjacentValues.length; j++)
         {
-            if (!visited[adjacentValues[j]])
+            var nextNode = adjacentValues[j];
+            if (!visited[nextNode])
             {
-                var newScore = distance[currNode] + graph[currNode][j][2];
+                var newScore = distance[currNode] + edgeCost(currNode, nextNode, graph);
 
-                if (newScore < distance[adjacentValues[j]])
+                if (newScore < distance[nextNode])
                 {
-                    distance[adjacentValues[j]] = newScore;
-                    routeTo[adjacentValues[j]].push(currNode);
+                    distance[nextNode] = newScore;
+                    routeTo[nextNode].push(currNode);
                 }
             }
         }
 
         if (currNode == targetNode)
         {
-            return findPath(targetNode, routeTo);
+            var result = findPath(targetNode, routeTo);
+            result.unshift(sourceNode);
+            return result;
         }
 
         if (distance[minScoreNode(graph, distance, visited)] == Infinity)
@@ -79,7 +83,7 @@ function findPath (targetNode, routeTo)
 
     while (currNode != null)
     {
-        route.push(currNode);
+        route.unshift(currNode);
         currNode = routeTo[currNode][i];
         i++;
     }
@@ -87,9 +91,26 @@ function findPath (targetNode, routeTo)
     return route;
 }
 
+function edgeCost(currNode, nextNode, graph)
+{
+    var index = 0;
+
+    for (var i = 0; i < graph[currNode].length; i++)
+    {
+        if (graph[i][1] == nextNode)
+        {
+            index = i;
+            break;
+        }
+    }
+
+    var result = graph[currNode][index][1];
+    return result;
+}
+
 // Temporary test input
 
-var testInput1 = [[[1, 1], [2, 4]], [[0, 1], [2, 2], [3, 5]], [[0, 4], [1, 2], [4, 1]], [[1, 5], [2, 1]]];
+var testInput1 = [[[1, 1], [2, 4]], [[0, 1], [2, 2], [3, 5]], [[0, 4], [1, 2], [3, 1]], [[1, 5], [2, 1]]];
 
 var testOutput1 = dijkstra(testInput1, 0, 3);
 
