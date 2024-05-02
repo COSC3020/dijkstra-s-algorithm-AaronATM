@@ -1,117 +1,74 @@
-// used code from a medium article and looked at baeldung
-// https://patrickkarsh.medium.com/dijkstras-shortest-path-algorithm-in-javascript-1621556a3a15
-// https://www.baeldung.com/cs/dijkstra
+// used code from geeks for geeks
+// https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/
 
-
-// works but not entirely sure if it is finding the right path based on Dijkstra's, or just this implementation
-
-// data structure to input is weighted adjacency list
-function dijkstra (graph, sourceNode, targetNode) 
+// data structure to input is weighted adjacency matrix
+function dijkstra (graph, sourceNode)
 {
     var distance = new Array(graph.length);
     var visited = new Array(graph.length);
-    var routeTo = Array.from(new Array(graph.length), function() { return [];});
-
-    for (var i = 0; i < graph.length; i++)
+      
+    for(var i = 0; i < graph.length; i++)
     {
-        visited[i] = false;
         distance[i] = Infinity;
+        visited[i] = false;
     }
-
+     
     distance[sourceNode] = 0;
 
-    while (graph.length)
+    for(var j = 0; j < graph.length - 1; j++)
     {
-        var adjacentValues = [];
-        var currNode = minScoreNode(graph, distance, visited);
+        var currNode = findMin(distance, visited);  
         visited[currNode] = true;
-
-        for (var i = 0; i < graph[currNode].length; i++)
+          
+        for(var i = 0; i < graph.length; i++)
         {
-            adjacentValues.push(graph[currNode][i][0]);
-        }
-
-        for (var j = 0; j < adjacentValues.length; j++)
-        {
-            var nextNode = adjacentValues[j];
-            if (!visited[nextNode])
+            if (!visited[i] && graph[currNode][i] != 0 && 
+                   distance[currNode] != Infinity &&
+                   distance[currNode] + graph[currNode][i] < distance[i])
             {
-                var newScore = distance[currNode] + edgeCost(currNode, nextNode, graph);
-
-                if (newScore < distance[nextNode])
-                {
-                    distance[nextNode] = newScore;
-                    routeTo[nextNode].push(currNode);
-                }
+                distance[i] = distance[currNode] + graph[currNode][i];
             }
         }
-
-        if (currNode == targetNode)
-        {
-            var result = findPath(targetNode, routeTo);
-            result.unshift(sourceNode);
-            return result;
-        }
-
-        if (distance[minScoreNode(graph, distance, visited)] == Infinity)
-        {
-            return "Path not found";
-        }
     }
+     
+    return distance;
 }
 
-function minScoreNode (graph, distance, visited)
+function findMin(distance, visited)
 {
-    result = null;
-
-    for (var i = 0; i < graph.length; i++)
+    var min = Infinity;
+    var min_index = -1;
+     
+    for(var i = 0; i < distance.length; i++)
     {
-        if (!visited[i] && (result == null || distance[i] < distance[result]))
+        if (visited[i] == false && distance[i] <= min) 
         {
-            result = i;
+            min = distance[i];
+            min_index = i;
         }
     }
 
-    return result;
+    return min_index;
 }
+ 
+// Temporary testing code
+var testInput1 = [ [ 0, 4, 0, 0, 0, 0, 0, 8, 0 ],
+                   [ 4, 0, 8, 0, 0, 0, 0, 11, 0 ],
+                   [ 0, 8, 0, 7, 0, 4, 0, 0, 2 ],
+                   [ 0, 0, 7, 0, 9, 14, 0, 0, 0],
+                   [ 0, 0, 0, 9, 0, 10, 0, 0, 0 ],
+                   [ 0, 0, 4, 14, 10, 0, 2, 0, 0],
+                   [ 0, 0, 0, 0, 0, 2, 0, 1, 6 ],
+                   [ 8, 11, 0, 0, 0, 0, 1, 0, 7 ],
+                   [ 0, 0, 2, 0, 0, 0, 6, 7, 0 ] ];
 
-function findPath (targetNode, routeTo)
-{
-    var route = [];
-    var currNode = targetNode;
-    var i = 0;
+var testInput2 = [ [0, 1, 4, 0],
+                   [1, 0, 2, 5],
+                   [4, 2, 0, 1],
+                   [0, 5, 1, 0] ];
 
-    while (currNode != null)
-    {
-        route.unshift(currNode);
-        currNode = routeTo[currNode][i];
-        i++;
-    }
-
-    return route;
-}
-
-function edgeCost(currNode, nextNode, graph)
-{
-    var index = 0;
-
-    for (var i = 0; i < graph[currNode].length; i++)
-    {
-        if (graph[i][1] == nextNode)
-        {
-            index = i;
-            break;
-        }
-    }
-
-    var result = graph[currNode][index][1];
-    return result;
-}
-
-// Temporary test input
-
-var testInput1 = [[[1, 1], [2, 4]], [[0, 1], [2, 2], [3, 5]], [[0, 4], [1, 2], [3, 1]], [[1, 5], [2, 1]]];
-
-var testOutput1 = dijkstra(testInput1, 0, 3);
+var testOutput1 = dijkstra(testInput1, 0);
+var testOutput2 = dijkstra(testInput2, 0);
 
 console.log(testOutput1);
+console.log(testOutput2);
