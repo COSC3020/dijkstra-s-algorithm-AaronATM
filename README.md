@@ -2,12 +2,12 @@
 # Dijkstra's Algorithm
 
 Recall the pseudocode for Dijkstra's algorithm:
-- initialize the dist to each vertex to $\infty$, source to 0
+- initialize the distance to each vertex to $\infty$, source to 0
 - while there are unmarked vertices left in the graph
-    - select the unmarked vertex $v$ with the lowest dist
-    - mark $v$ with distance dist
+    - select the unmarked vertex $v$ with the lowest distance
+    - mark $v$ with distanceance distance
     - for each edge $(v,w)$
-        - dist($w$) = min $\left(\textrm{dist}(w), \textrm{dist}(v) + \textrm{weight of }(v, w)\right)$
+        - distance($w$) = min $\left(\textrm{distance}(w), \textrm{distance}(v) + \textrm{weight of }(v, w)\right)$
 
 Implement Dijkstra's algorithm. Start with the template I provided in `code.js`
 and test your new function.
@@ -24,3 +24,8 @@ inefficient.
 
 What is the big $\Theta$ complexity of your implementation? Add your
 answer, including your reasoning, to this markdown file.
+
+Runtime: $\Theta (V^2)$ where V is the number of vertices in the graph.
+
+Reasoning:
+For every vertice that we travel to, we iterate over every single adjacent vertice to update the distances, thus the runtime is $\Theta (V^2)$.
