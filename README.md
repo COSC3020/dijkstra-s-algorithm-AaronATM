@@ -21,6 +21,9 @@ to be the most efficient one, but please make sure that it is not unnecessarily
 inefficient.
 
 ## Runtime Analysis
+// looked at geeks for geeks dijkstra runtime analysis and analysis for this specific implementation
+// https://www.geeksforgeeks.org/introduction-to-dijkstras-shortest-path-algorithm/
+// https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/
 
 What is the big $\Theta$ complexity of your implementation? Add your
 answer, including your reasoning, to this markdown file.
